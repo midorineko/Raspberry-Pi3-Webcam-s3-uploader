@@ -3,35 +3,23 @@ from datetime import datetime
 from time import sleep
 import datetime
 import os
-import tinys3
-import yaml
+import boto3
 
 sleep(2)
 
 # endlessly capture images awwyiss
 while True:
     # Build filename string
-    filepath = "~/Desktop/s3-cam/lot_{}.jpeg".format(datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
+    filepath = "lot.jpg"
     
-    os.system('fswebcam '+filepath)
+    os.system('fswebcam -r 1280x720 '+filepath)
 
-    # Upload to S3
-    conn = tinys3.Connection("aws access key", "aws secret key")
-    f = open(filepath, 'rb')
-    conn.upload(filepath, f, "bucketname",
-               headers={
-               'x-amz-meta-cache-control': 'max-age=60'
-               })
-    
-    
-    AWS_ACCESS_KEY_ID = 'XXXXXXXXXXXXXXXXXXXXX'
-    AWS_SECRET_ACCESS_KEY = 'XXXXXXXXXXXXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXXXXX'
+    bucketName = "iot-lot-photos"
+    localPhotoName = "lot.jpg"
+    s3SaveName = "lot_{}.jpeg".format(datetime.datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
+    s3 = boto3.client('s3')
+    s3.upload_file(localPhotoName,bucketName,s3SaveName)
 
-    s3_connection = boto.connect_s3(AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY)
-    bucket = s3_connection.get_bucket('iot-lot-photos')
-    key = boto.s3.key.Key(bucket, filepath)
-    with open(filepath) as f:
-        key.send_file(f)
-
+        
     # sleep
     sleep(60)
