@@ -24,22 +24,14 @@ while True:
                })
     
     
-     AWS_ACCESS_KEY_ID = 'XXXXXXXXXXXXXXXXXXXXX'
-  AWS_SECRET_ACCESS_KEY = 'XXXXXXXXXXXXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXXXXX'
+    AWS_ACCESS_KEY_ID = 'XXXXXXXXXXXXXXXXXXXXX'
+    AWS_SECRET_ACCESS_KEY = 'XXXXXXXXXXXXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXXXXX'
 
-  bucket_name = 'my-bucket'
-  conn = boto.connect_s3(AWS_ACCESS_KEY_ID,
-          AWS_SECRET_ACCESS_KEY)
-
-  bucket = conn.get_bucket('my-bucket')
-
-  print 'Uploading %s to Amazon S3 bucket %s' % \
-     (filename, bucket_name)
-
-  k = Key(bucket)
-  k.key = filename
-  k.set_contents_from_filename(filename,
-      cb=percent_cb, num_cb=10)
+    s3_connection = boto.connect_s3(AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY)
+    bucket = s3_connection.get_bucket('iot-lot-photos')
+    key = boto.s3.key.Key(bucket, filepath)
+    with open(filepath) as f:
+        key.send_file(f)
 
     # sleep
     sleep(60)
