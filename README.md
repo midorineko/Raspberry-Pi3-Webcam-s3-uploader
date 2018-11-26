@@ -23,6 +23,4 @@ set ```output format (json)```
 Update the ```localPhotoName, bucketName, and s3SaveName```.
 
 Currently images are saved in the same directory as 'lot.jpg', they override each other locally, but save to s3 with name + date 
-
 and time and do not overwrite. 
-
