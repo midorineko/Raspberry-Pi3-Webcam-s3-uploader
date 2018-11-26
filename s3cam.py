@@ -10,13 +10,12 @@ sleep(2)
 # endlessly capture images awwyiss
 while True:
     # Build filename string
-    filepath = "lot.jpg"
+    localPhotoName = "lot.jpg"
     
-    os.system('fswebcam -r 1280x720 '+filepath)
+    os.system('fswebcam -r 1280x720 '+localPhotoName)
 
     bucketName = "iot-lot-photos"
-    localPhotoName = "lot.jpg"
-    s3SaveName = "lot_{}.jpeg".format(datetime.datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
+    s3SaveName = "lot_{}.jpg".format(datetime.datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
     s3 = boto3.client('s3')
     s3.upload_file(localPhotoName,bucketName,s3SaveName)
 
